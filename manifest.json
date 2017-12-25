@@ -1,0 +1,22 @@
+{
+  "name": "JIRA Extensions",
+  "version": "0.1",
+  "manifest_version": 2,
+  "description": "Various extensions for JIRA",
+  "icons": { "128": "icon128.png" },
+  "browser_action": {
+    "default_title": "JIRA Extensions",
+    "default_icon": "icon128.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*/jira/secure/RapidBoard.jspa*"],
+      "js": ["inject.js"]
+    }
+  ],
+  "web_accessible_resources": ["extensions.js"]
+}
