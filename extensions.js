@@ -1,4 +1,5 @@
-var THEME_COLOR = "#7fcf9a";
+var THEME_COLOR   = "#7fcf9a";
+var THEME_COLOR_2 = "#1DC0F0";
 
 // https://stackoverflow.com/a/28056903
 function hexToRGB(hex, alpha) {
@@ -65,7 +66,10 @@ function updateSprint() {
     "use strict";
 
     function updateTotal() {
-        AJS.$(".ghx-sprint-planned > div").each(function () {
+        AJS.$(".ghx-sprint-planned").each(function () {
+
+            var printId = $(this).attr('data-sprint-id')
+
             var sum = 0.0;
             $(this).find(".js-issue > div").each(function () {
                 var t = $(this).find("span.aui-badge").text();
@@ -80,11 +84,33 @@ function updateSprint() {
                     background: hexToRGB(THEME_COLOR, 0.2)
                 });
             }
+
+            var statTot = $(this).find(".ghx-stat-total").last();
+            if (statTot !== null) {
+                var exist = statTot.find("#spr-rem-lbl").length;
+                if (exist > 0) {
+                    // Remove existing
+                    statTot.find("#spr-rem-lbl").remove();
+                }
+
+                var exist = statTot.find("#spr-rem-badge").length;
+                if (exist > 0) {
+                    // Remove existing
+                    statTot.find("#spr-rem-badge").remove();
+                }
+
+                var totalTime = parseFloat(AJS.$("#spr-tot-hour-" + printId).val())
+                var rem = totalTime - sum
+
+                statTot.append('<span id="spr-rem-lbl" class="ghx-label">Time Left</span><span id="spr-rem-badge" style="background: ' + hexToRGB(THEME_COLOR_2, 0.2) + ';" class="aui-badge ghx-estimate-badge">' + rem + 'h</span>')                
+            }
+
+            localStorage.setItem("sprint-time-tot-" + printId, AJS.$("#spr-tot-hour-" + printId).val());
         });
     }
     
-    var issues = [];
-    
+    var issues = [];    
+
     AJS.$(".ghx-sprint-group .js-issue").each(function () {
         issues.push(aggregateEstimates(this));
     });
@@ -112,15 +138,38 @@ function updateBacklog() {
     });
 }
 
+function addSprintTimeInput() {
+
+        AJS.$(".ghx-sprint-planned").each(function () {
+
+            var printId = $(this).attr('data-sprint-id')
+
+            var statTot = $(this).find(".ghx-stat-total").last();
+            if (statTot !== null) {
+                var exist = statTot.find("#spr-tot-hour").length;
+                if (exist > 0) {
+                    // Remove existing
+                    statTot.find("#spr-tot-hour").remove();
+                }
+
+                statTot.prepend('<input type="number" class="ghx-fieldtype-number" id="spr-tot-hour-' + printId + '" placeholder="Available Sprint Hours" step="1" style="margin-left: 10px"/>');
+
+                AJS.$("#spr-tot-hour-" + printId).val(localStorage.getItem("sprint-time-tot-" + printId));
+            }
+        });
+}
+
 AJS.$(document).ready(function () {
     "use strict";
     
     var path = window.location.pathname;
     
-    if (path.substring(path.lastIndexOf("/") + 1).indexOf("RapidBoard") > -1) {
-        
+    if (path.substring(path.lastIndexOf("/") + 1).indexOf("RapidBoard") > -1) {            
+
         AJS.$("#ghx-view-modes").append('<button class="aui-button aui-button-primary" id="add-agg-spr">Σ Sprints</button>');
         AJS.$("#ghx-view-modes").append('<button class="aui-button aui-button-primary" id="add-agg-bl">Σ Backlog</button>');
+
+        addSprintTimeInput()
 
         AJS.$("#add-agg-spr").css({
                     background: THEME_COLOR
