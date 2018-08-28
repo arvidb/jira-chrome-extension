@@ -146,15 +146,18 @@ function addSprintTimeInput() {
 
             var statTot = $(this).find(".ghx-stat-total").last();
             if (statTot !== null) {
-                var exist = statTot.find("#spr-tot-hour").length;
+
+                var inputName = "spr-tot-hour-" + printId
+
+                var exist = statTot.find("#" + inputName).length;
                 if (exist > 0) {
                     // Remove existing
-                    statTot.find("#spr-tot-hour").remove();
+                    statTot.find("#" + inputName).remove();
                 }
 
-                statTot.prepend('<input type="number" class="ghx-fieldtype-number" id="spr-tot-hour-' + printId + '" placeholder="Available Sprint Hours" step="1" style="margin-left: 10px"/>');
+                statTot.prepend('<input type="number" class="ghx-fieldtype-number" id="' + inputName + '" placeholder="Available Sprint Hours" step="1" style="margin-left: 10px"/>');
 
-                AJS.$("#spr-tot-hour-" + printId).val(localStorage.getItem("sprint-time-tot-" + printId));
+                AJS.$("#" + inputName).val(localStorage.getItem("sprint-time-tot-" + printId));
             }
         });
 }
