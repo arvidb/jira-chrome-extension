@@ -68,7 +68,7 @@ function updateSprint() {
     function updateTotal() {
         AJS.$(".ghx-sprint-planned").each(function () {
 
-            var printId = $(this).attr('data-sprint-id')
+            var sprintId = $(this).attr('data-sprint-id')
 
             var sum = 0.0;
             $(this).find(".js-issue > div").each(function () {
@@ -99,13 +99,13 @@ function updateSprint() {
                     statTot.find("#spr-rem-badge").remove();
                 }
 
-                var totalTime = parseFloat(AJS.$("#spr-tot-hour-" + printId).val())
+                var totalTime = parseFloat(AJS.$("#spr-tot-hour-" + sprintId).val())
                 var rem = totalTime - sum
 
                 statTot.append('<span id="spr-rem-lbl" class="ghx-label">Time Left</span><span id="spr-rem-badge" style="background: ' + hexToRGB(THEME_COLOR_2, 0.2) + ';" class="aui-badge ghx-estimate-badge">' + rem + 'h</span>')                
             }
 
-            localStorage.setItem("sprint-time-tot-" + printId, AJS.$("#spr-tot-hour-" + printId).val());
+            localStorage.setItem("sprint-time-tot-" + sprintId, AJS.$("#spr-tot-hour-" + sprintId).val());
         });
     }
     
@@ -142,12 +142,12 @@ function addSprintTimeInput() {
 
         AJS.$(".ghx-sprint-planned").each(function () {
 
-            var printId = $(this).attr('data-sprint-id')
+            var sprintId = $(this).attr('data-sprint-id')
 
             var statTot = $(this).find(".ghx-stat-total").last();
             if (statTot !== null) {
 
-                var inputName = "spr-tot-hour-" + printId
+                var inputName = "spr-tot-hour-" + sprintId
 
                 var exist = statTot.find("#" + inputName).length;
                 if (exist > 0) {
@@ -157,7 +157,7 @@ function addSprintTimeInput() {
 
                 statTot.prepend('<input type="number" class="ghx-fieldtype-number" id="' + inputName + '" placeholder="Available Sprint Hours" step="1" style="margin-left: 10px"/>');
 
-                AJS.$("#" + inputName).val(localStorage.getItem("sprint-time-tot-" + printId));
+                AJS.$("#" + inputName).val(localStorage.getItem("sprint-time-tot-" + sprintId));
             }
         });
 }
