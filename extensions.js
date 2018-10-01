@@ -105,7 +105,9 @@ function updateSprint() {
                 statTot.append('<span id="spr-rem-lbl" class="ghx-label">Time Left</span><span id="spr-rem-badge" style="background: ' + hexToRGB(THEME_COLOR_2, 0.2) + ';" class="aui-badge ghx-estimate-badge">' + rem + 'h</span>')                
             }
 
-            localStorage.setItem("sprint-time-tot-" + sprintId, AJS.$("#spr-tot-hour-" + sprintId).val());
+            if (AJS.$("#spr-tot-hour-" + sprintId).length > 0) {
+                localStorage.setItem("sprint-time-tot-" + sprintId, AJS.$("#spr-tot-hour-" + sprintId).val());
+            }            
         });
     }
     
@@ -171,8 +173,7 @@ AJS.$(document).ready(function () {
 
         AJS.$("#ghx-view-modes").append('<button class="aui-button aui-button-primary" id="add-agg-spr">Σ Sprints</button>');
         AJS.$("#ghx-view-modes").append('<button class="aui-button aui-button-primary" id="add-agg-bl">Σ Backlog</button>');
-
-        addSprintTimeInput()
+        AJS.$("#ghx-view-modes").append('<button class="aui-button aui-button-primary" id="add-tr">⏱</button>');
 
         AJS.$("#add-agg-spr").css({
                     background: THEME_COLOR
@@ -180,7 +181,10 @@ AJS.$(document).ready(function () {
         AJS.$("#add-agg-bl").css({
                     background: THEME_COLOR
                 });
-        
+        AJS.$("#add-tr").css({
+                    background: THEME_COLOR
+                });
+
         AJS.$("#add-agg-spr").click(function () {
             updateSprint();
         });
@@ -189,6 +193,10 @@ AJS.$(document).ready(function () {
             updateBacklog();
         });
         
+        AJS.$("#add-tr").click(function () {
+            addSprintTimeInput();
+        });
+
         // TODO: Auto updates
         /*
         JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function(e, context, reason) {
